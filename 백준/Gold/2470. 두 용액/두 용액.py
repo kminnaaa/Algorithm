@@ -24,5 +24,4 @@ while left < right:
     else:
         right -= 1
 
-# 결과 출력
 print(answer[0], answer[1])
