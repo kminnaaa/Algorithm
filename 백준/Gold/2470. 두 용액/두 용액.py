@@ -7,24 +7,22 @@ arr.sort()
 left = 0
 right = N-1
 
-answer = abs(arr[left] + arr[right])
-value = [arr[left], arr[right]]
-
+min_val = abs(arr[left] + arr[right])
+answer = [arr[left], arr[right]]
 
 while left < right:
-    left_val = arr[left]
-    right_val = arr[right]
-
-    sum = left_val + right_val
+    total = arr[left] + arr[right]
   
-    if abs(sum) < answer:
-        answer = abs(sum)
-        value = [left_val, right_val]
-        if answer == 0:
-          break
-    if sum < 0:
+    if abs(total) < min_val:
+        min_val = abs(total)
+        answer = [arr[left], arr[right]]
+        if min_val == 0:
+            break
+
+    if total < 0:
         left += 1
     else:
         right -= 1
 
-print(value[0], value[1])
+# 결과 출력
+print(answer[0], answer[1])
