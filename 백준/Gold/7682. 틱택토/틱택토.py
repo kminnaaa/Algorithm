@@ -8,10 +8,11 @@ X > O X > O 순서
 조건..
 3칸 채워서 승리로 끝나거나 / 보드 꽉 차서 끝나거나
 
-1. X 승리 : 홀수번째 = Y + 1개
+2. X 승리 : 홀수번째 = Y + 1개
    Y 승리 : 짝수번째 = X + 1개
-2. 보드 꽉 찬 경우 = X 5개 O 4개
+3. 보드 꽉 찬 경우 = X 5개 O 4개
 
+1. ** 항상 X가 한 개 더 많아야 한다**
 """
 
 result = []
@@ -50,8 +51,11 @@ while True:
     x_win = check_win(board, 'X')
     o_win = check_win(board, 'O')
 
+    # 개수 안맞는 경우 : O가 더 많거나, X와 차이 1보다 크거나
+    if o_count > x_count or x_count > o_count + 1:
+        result.append("invalid")
     # 둘 다 이긴 경우
-    if x_win and o_win:
+    elif x_win and o_win:
         result.append("invalid")
     # X가 이겼고, 개수 1 더 많은 경우(홀수)
     elif x_win and x_count == o_count + 1:
@@ -59,9 +63,6 @@ while True:
     # O가 이겼고, 개수 같은 경우(짝수)
     elif o_win and x_count == o_count:
         result.append("valid")
-    # O가 이겼는데 개수 안맞는 경우
-    elif o_count > x_count or x_count > o_count + 1:
-        result.append("invalid")
     # 꽉 찬 경우
     elif not x_win and not o_win and x_count + o_count == 9:
         result.append("valid")
