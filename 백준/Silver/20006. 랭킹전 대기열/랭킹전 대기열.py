@@ -22,7 +22,7 @@ for _ in range(p):
 for lev, name in players:
     flag = 0
     for i in range(len(rooms)):
-        if lev - 10 <= rooms[i][0][0] <= lev + 10 and len(rooms[i]) < m:
+        if rooms[i][0][0] - 10 <= lev <= rooms[i][0][0] + 10 and len(rooms[i]) < m:
             rooms[i].append([lev, name])
             flag = 1
             break
