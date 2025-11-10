@@ -1,15 +1,11 @@
-# 백준 10773
-
 K = int(input())
-num = []
-cnt = 1
-i = 0
+arr = []
 
-while cnt <= K:
-    num.append(int(input()))
-    cnt += 1
-    if num[i] == 0:
-        del num[i-1], num[i-1]
-        i -= 2
-    i += 1
-print(sum(num))
+for i in range(K):
+    num = int(input())
+    if num == 0:
+        arr.pop()
+    else:
+        arr.append(num)
+
+print(sum(arr))
