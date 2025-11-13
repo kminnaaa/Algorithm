@@ -1,56 +1,52 @@
-"""
-사탕의 색이 다른 인접한 두 칸을 고른다
-고른 칸에 들어있는 사탕을 서로 교환
-모두 같은 색으로 이루어져 있는 가장 긴 연속 부분(행 또는 열)
-그 사탕을 모두 먹는다.
-
-상근이가 먹을 수 있는 사탕의 최대 개수
-
-교환할 수 있는 칸 다 교환해 보고 거기서 최댓값 구하기?
-탐색은 오른쪽 아래로
-같은 칸끼리 바꿔도 결과 똑같으니까 그냥 바꿔도 ok
-일단 바꿔보고 다시 되돌려 놓기 max만 구하면 되니까
-"""
-import sys
-input = sys.stdin.readline
-
 N = int(input())
-board = [list(input()) for _ in range(N)]
+board = [list(input().strip()) for _ in range(N)]
 
-def count(board):
-    maximum = 0
+def find_longest():
+    length = []
+    max_length = 0
+
+    # 행
     for i in range(N):
-        row = 1
-        col = 1
-        for j in range(1, N):
-            # 오른쪽 탐색
-            if board[i][j] == board[i][j - 1]:
-                row += 1
+        cnt = 1
+        for j in range(N-1):
+            if board[i][j] == board[i][j+1]:
+                cnt += 1
             else:
-                row = 1
-            maximum = max(maximum, row)
+                max_length = max(max_length, cnt)
+                cnt = 1
+        max_length = max(max_length, cnt)
 
-            # 아래로 탐색
-            if board[j][i] == board[j - 1][i]:
-                col += 1
-            else:
-                col = 1
-            maximum = max(maximum, col)
-    return maximum
-
-ans = 0
-
-for i in range(N):
+    # 열
     for j in range(N):
-        if j + 1 < N:
-            board[i][j], board[i][j+1] = board[i][j+1], board[i][j]
-            ans = max(ans, count(board))
-            board[i][j], board[i][j+1] = board[i][j+1], board[i][j]
+        cnt = 1
+        for i in range(N-1):
+            if board[i][j] == board[i+1][j]:
+                cnt += 1
+            else:
+                max_length = max(max_length, cnt)
+                cnt = 1
+        max_length = max(max_length, cnt)
+            
+    return max_length
 
-        # 아래쪽이랑 바꾸기
-        if i + 1 < N:
-            board[i][j], board[i+1][j] = board[i+1][j], board[i][j]
-            ans = max(ans, count(board))
-            board[i][j], board[i+1][j] = board[i+1][j], board[i][j]
 
-print(ans)
+# 인접한 두칸 : x축이나 y축 중 하나 같은 것
+# 인접한 두칸 선택 > 문자 서로 교환 (아마도 한번만 이루어지는 듯)
+# NxN (0~N-1) 배열에서, x축이 같거나 y축이 같거나
+arr = []
+for i in range(N):
+    for j in range(N-1):
+        # 가로 인접
+        # [i][j]랑 [i][j+1]이랑 교환
+        board[i][j], board[i][j+1] = board[i][j+1], board[i][j]
+        arr.append(find_longest())
+        board[i][j], board[i][j+1] = board[i][j+1], board[i][j]
+        # 세로 인접
+        # [i][j]랑 [i+1][j]랑 교환
+        board[j][i], board[j+1][i] = board[j+1][i], board[j][i]
+        arr.append(find_longest())
+        board[j][i], board[j+1][i] = board[j+1][i], board[j][i]
+
+print(max(arr))
+# 같은 색으로 이루어져 있는 가장 긴 연속 부분 (하나만, 행/열) 선택 후 모두 먹음
+# 먹을 수 있는 사탕의 최대 개수
