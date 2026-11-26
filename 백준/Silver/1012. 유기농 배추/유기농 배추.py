@@ -1,53 +1,43 @@
-"""
-입력
-제일 바깥 for : T (별개 케이스)
->
-M, N(가로, 세로)으로 그래프 초기화
->
-그다음 for : K번
->
-배추 위치 X, Y 주어짐
-
-0은 빈땅, 1은 배추 심어진 땅
-
-
-인접해있는 배추들이 몇 군데에 퍼져 있는지..
-
-x, y 순서...................
-"""
 import sys
-sys.setrecursionlimit(10**6)
+input = sys.stdin.readline
+sys.setrecursionlimit(100000)
 
-def dfs(x, y):
-  if x <= -1 or x >= M or y <= -1 or y >= N:
-    return False
-  
-  if graph[y][x] == 1:
-    graph[y][x] = -1
-    dfs(x-1, y)
-    dfs(x, y-1)
-    dfs(x+1, y)
-    dfs(x, y+1)
-    return True
-  
-  return False
+dx = [-1, 1, 0, 0]
+dy = [0, 0, 1, -1]
+
+def dfs(y, x):
+    visited[y][x] = True
+
+    for i in range(4):
+        ny = y + dy[i]
+        nx = x + dx[i]
+
+        if 0 <= ny < N and 0 <= nx < M:
+            if not visited[ny][nx] and ground[ny][nx] == 1:
+
+                dfs(ny, nx)
 
 T = int(input())
-result = []
 
 for _ in range(T):
-  M, N, K = map(int, input().split())
-  graph = [[0] * M for _ in range(N)]
-  for _ in range(K):
-    a, b = map(int, input().split())
-    graph[b][a] = 1
+    M, N, K = map(int, input().split())
+    location = [list(map(int, input().split())) for _ in range(K)]
+    ground = [[0] * M for _ in range(N)]
 
-  temp = 0
-  for y in range(M):
-    for x in range(N):
-      if dfs(y, x) == True:
-        temp += 1
-  result.append(temp)
+    visited = [[False] * M for _ in range(N)]
 
-for i in range(T):
-  print(result[i])
+    for i in range(K):
+        x, y = location[i]
+        ground[y][x] = 1
+    
+    ans = 0
+
+    # 배추 덩어리 개수를 세어야 함.... dfs?
+    for y in range(N):
+        for x in range(M):
+            # 1. 방문 여부 검사 & 1인지 2. dfs 호출
+            if ground[y][x] == 1 and visited[y][x] == False:
+                dfs(y, x)
+                ans += 1
+
+    print(ans)
