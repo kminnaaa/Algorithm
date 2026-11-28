@@ -1,32 +1,37 @@
-# 백준 4963 dfs
 import sys
+from collections import deque
+
 sys.setrecursionlimit(10000)
+input = sys.stdin.readline
+
+dx = [-1, 0, 1, 1, 1, 0, -1, -1]
+dy = [1, 1, 1, 0, -1, -1, -1, 0]
 
 def dfs(x, y):
-    if x <= -1 or y <= -1 or x >= h or y >= w:
-        return False
-    if graph[x][y] == 1:
-        graph[x][y] = 0
-        dfs(x, y+1)
-        dfs(x, y-1)
-        dfs(x-1, y)
-        dfs(x+1, y)
-        dfs(x-1, y+1)
-        dfs(x-1, y-1)
-        dfs(x+1, y+1)
-        dfs(x+1, y-1)
-        return True
-    return False
+    if 0 <= x < W and 0 <= y < H and board[y][x] == 1:
+        if not visited[y][x]:
+            visited[y][x] = True
+
+            for i in range(8):
+                nx = x + dx[i]
+                ny = y + dy[i]
+
+                dfs(nx, ny)
+
 
 while True:
-    w, h = map(int, sys.stdin.readline().split())
-    if w == 0 and h == 0: break
-    graph = []
-    for i in range(h):
-        graph.append(list(map(int, sys.stdin.readline().split())))
-    result = 0
-    for i in range(h):
-        for j in range(w):
-            if dfs(i, j) == True:
-                result += 1
-    print(result)
+    W, H = map(int, input().split())
+    if W == 0 and H == 0: break
+
+    board = [list(map(int, input().split())) for _ in range(H)]
+    visited = [[False] * W for _ in range(H)]
+
+    ans = 0
+    # 1 덩어리 세기...
+    for y in range(H):
+        for x in range(W):
+            if board[y][x] == 1 and not visited[y][x]:
+                dfs(x, y)
+                ans +=1
+
+    print(ans)    
